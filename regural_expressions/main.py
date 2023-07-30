@@ -37,6 +37,28 @@ def search_phones(contacts_list, row, num):
     except AttributeError:
         pass
 
+def remove_doubles(contacts_list, new_contacts_list):
+    for row_num, contact in enumerate(contacts_list):
+        if row_num != len(contacts_list):
+                for item in contacts_list[row_num + 1:]:
+                    if contact[0] in item and contact[1] in item:
+                        difference = sorted(set(item).difference(set(contact)))
+
+                        for diff in difference:
+                            if re.search(r"(\+7|8)", diff) is not None:
+                                contact[-2] = diff
+                            elif re.search(r"@", diff) is not None:
+                                contact[-1] = diff
+                            else:
+                                if contact[-3] == '':
+                                    contact[-3] = diff
+                                else:
+                                    contact[-4] = diff
+
+                        new_contacts_list += [contact]
+                        contacts_list.remove(contact)
+                        contacts_list.remove(item)
+
 def main():
     with open("regural_expressions/phonebook_raw.csv") as file:
         rows = csv.reader(file, delimiter=',')
@@ -51,38 +73,16 @@ def main():
         'email'
         ]
     contacts_list.remove(headers)
+    new_contacts_list = [headers]
     
     for num, row in enumerate(contacts_list):
         search_names(contacts_list, row, num)
         search_phones(contacts_list, row, num)
 
-    example = list(set(" ".join(contacts_list[-1])).union(set(" ".join(contacts_list[-2]))))
-
-    new_contacts_list = [headers]
-    for row_num, contact in enumerate(contacts_list):
-        if row_num != len(contacts_list):
-            for item in contacts_list[row_num + 1:]:
-                if contact[0] in item and contact[1] in item:
-                    difference = sorted(set(item).difference(set(contact)))
-
-                    for diff in difference:
-                        if re.search(r"(\+7|8)", diff) is not None:
-                            contact[-2] = diff
-                        elif re.search(r"@", diff) is not None:
-                            contact[-1] = diff
-                        else:
-                            if contact[-3] == '':
-                                contact[-3] = diff
-                            else:
-                                contact[-4] = diff
-
-                    new_contacts_list += [contact]
-                    contacts_list.remove(contact)
-                    contacts_list.remove(item)
-
+    remove_doubles(contacts_list, new_contacts_list)
     new_contacts_list.extend(contacts_list)
 
-    with open("phonebook.csv", "w") as f:
+    with open("regural_expressions/phonebook.csv", "w") as f:
         datawriter = csv.writer(f, delimiter=',')
         datawriter.writerows(new_contacts_list)
     
