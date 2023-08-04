@@ -1,7 +1,8 @@
-import requests
 import os
-import lxml
+import json
 from pprint import pprint
+import requests
+import lxml
 from bs4 import BeautifulSoup
 
 def find_tags():
@@ -17,7 +18,30 @@ def find_tags():
 
         for block in blocks:
             name_href = block.find("a", class_="serp-item__title")
-            print(name_href)
+            if "django" in name_href.text.lower() or "flask" in name_href.text.lower():
+                salary = block.find("span", class_="bloko-header-section-2")
+                if salary is not None:
+                    salary = salary.text
+                else:
+                    salary = "None"
+
+                company_part = block.find("div", class_="vacancy-serp-item__info")
+
+                company_name = company_part.find("a", class_="bloko-link bloko-link_kind-tertiary").text
+
+                location = company_part.find("div", {"data-qa": "vacancy-serp__vacancy-address"}, class_="bloko-text").text
+
+                vacations.update({
+                    name_href.text: {
+                        "link": name_href.get("href"),
+                        "salary": salary,
+                        "company": company_name,
+                        "location": location
+                    }
+                })
+    
+    with open("vacations.json", "w") as file:
+        json.dump(vacations, file, ensure_ascii=False, indent=4)
 
 def main(url, headers):
     if "pages" not in os.listdir():
