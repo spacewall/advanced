@@ -1,5 +1,4 @@
 class FlatIterator:
-
     def __init__(self, list_of_list: list):
         self.list_of_list = list_of_list
 
@@ -11,7 +10,6 @@ class FlatIterator:
         return self
 
     def __next__(self):
-        
         if self.child_counter == len(self.child_list):
             self.parent_counter += 1
             if self.parent_counter == len(self.list_of_list):
@@ -27,7 +25,6 @@ class FlatIterator:
 
 
 def test_1():
-
     list_of_lists_1 = [
         ['a', 'b', 'c'],
         ['d', 'e', 'f', 'h', False],
