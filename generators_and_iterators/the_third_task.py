@@ -1,14 +1,46 @@
+from typing import Any
+
+
 class FlatIterator:
-    def __init__(self, list_of_list):
+    def __init__(self, list_of_list: list):
         self.list_of_list = list_of_list
 
     def __iter__(self):
-        ...
+        self.parent_counter = 0
+        self.previous_item = None
+
         return self
     
-    def __next__(self):
-        ...
+    def general_iterator(self):
+        item = self.list_of_list[self.parent_counter]
+
+        if item == []:
+            self.parent_counter += 1
+            item = self.list_of_list[self.parent_counter]
+        
         return item
+    
+    def __next__(self):
+        item = self.general_iterator()
+
+        try:
+            while type(item) is list:
+                if item[0] == []:
+                    item.pop(0)
+
+                if item == []:
+                    item = self.general_iterator()
+                    continue
+                
+                self.previous_item = item
+                item = item[0]
+
+            self.previous_item.pop(0)
+
+            return item
+
+        except IndexError:
+            raise StopIteration
 
 
 def test_3(): 
