@@ -3,11 +3,13 @@ from typing import Any
 
 class FlatIterator:
     def __init__(self, list_of_list: list):
-        self.list_of_list = list_of_list
+        self.list_of_list = list(list_of_list)
 
     def __iter__(self):
         self.parent_counter = 0
         self.previous_item = None
+        self.child_counter = 0
+        self.check_list = list()
 
         return self
     
@@ -25,17 +27,22 @@ class FlatIterator:
 
         try:
             while type(item) is list:
-                if item[0] == []:
-                    item.pop(0)
+                # if item[0] == []:
+                #     item.pop(0)
 
-                if item == []:
-                    item = self.general_iterator()
-                    continue
-                
+                # if item == []:
+                #     item = self.general_iterator()
+                #     continue
                 self.previous_item = item
-                item = item[0]
+                item = item[self.child_counter]
 
-            self.previous_item.pop(0)
+                if item in self.check_list and len(item) != 1:
+                    self.child_counter =+ 1
+                elif item == []:
+                    self.child_counter =+ 1
+                    item = self.previous_item[self.child_counter]
+
+            self.check_list.append(item)
 
             return item
 
