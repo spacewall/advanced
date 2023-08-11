@@ -1,6 +1,6 @@
 from data.courses_mentors_durations import courses, mentors, durations
 
-def max_min_len_of_course(courses, mentors, durations):
+def max_min_len_of_course(courses, mentors, durations) -> tuple:
     courses_list = []
 
     for item in zip(courses, mentors, durations):
@@ -29,7 +29,7 @@ def max_min_len_of_course(courses, mentors, durations):
     )
 
 
-def ordered_sequence(courses, mentors, durations):
+def ordered_sequence(courses, mentors, durations) -> list:
     courses_list = []
 
     for course, mentor, duration in zip(courses, mentors, durations):
@@ -54,7 +54,7 @@ def ordered_sequence(courses, mentors, durations):
 
     return result
 
-def correlation(courses, mentors, durations):
+def correlation(courses, mentors, durations) -> tuple:
     courses_list = []
 
     for course, mentor, duration in zip(courses, mentors, durations):
@@ -63,6 +63,7 @@ def correlation(courses, mentors, durations):
 
     duration_index = []
     mcount_index = []
+    
     for index, course in enumerate(courses_list):
         duration_index.append([course["duration"], index])
         mcount_index.append([len(course["mentors"]), index]) 
@@ -76,4 +77,4 @@ def correlation(courses, mentors, durations):
     return ("Связь есть" if indexes_d == indexes_m else "Связи нет", f"Порядок курсов по длительности: {indexes_d}", f"Порядок курсов по количеству преподавателей: {indexes_m}")
 
 if __name__ == "__main__":
-    print(correlation(courses, mentors, durations))
+    print(ordered_sequence(courses, mentors, durations))
