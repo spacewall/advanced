@@ -1,13 +1,15 @@
 import os
 import datetime
+from functools import wraps
 
 def logger(function):
+    @wraps(function)
     def iternal_function(*args, **kwargs):
         result = function(*args, **kwargs)
-        delimiter = "=" * 20
+        delimiter = "=" * 60
 
         with open("main.log", "a") as log:
-            log.write(f"{delimiter}\n{datetime.datetime.now()}\n{function}\n{args}\n{kwargs}\n{result}\n{delimiter}")
+            log.write(f"{delimiter}\n{datetime.datetime.now()}\n{function}\n{args}\n{kwargs}\n{result}\n{delimiter}\n")
 
         return result
     
