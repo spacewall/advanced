@@ -1,30 +1,24 @@
 import requests
 
-class YaUploader:
-    def __init__(self, token: str):
+class YaFolderUploader:
+    def __init__(self, token: str) -> None:
         self.headers = {
             "Authorization": f"OAuth {token}",
             "Content-type": "application/json"
         }
-
-    def get_link_to_upload(self, disk_file_path: str) -> str:
-        """Метод возвращает ссылку на загрузку в диск"""
-        headers = self.headers
-        upload_url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
-        params = {"path": disk_file_path, "overwrite": "true"}
-
-        responce = requests.get(upload_url, headers=headers, params=params)
-        
-        return responce.json()
     
-    def upload(self, file_path: str) -> None:
-        """Метод загружает файлы по списку file_path на яндекс диск"""
-        upload_url = self.get_link_to_upload("netology_test.txt")["href"]
+    def make_folder(self, file_name: str) -> requests.Response:
+        upload_url = "https://cloud-api.yandex.net/v1/disk/resources"
+        params = {"path": file_name}
 
-        with open(file_path, "rb") as file:
-            src = file.read()
+        responce = requests.put(url=upload_url, headers=self.headers, params=params)
 
-        responce = requests.put(upload_url, data=src)
+        return responce
+    
+    def delete_folder(self, file_name: str) -> requests.Response:
+        url_for_delete = "https://cloud-api.yandex.net/v1/disk/resources"
+        params = {"path": file_name}
 
-        if responce.status_code == 201:
-            print("Файл загружен успешно!")
+        responce = requests.delete(url=url_for_delete, headers=self.headers, params=params)
+
+        return responce

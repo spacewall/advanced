@@ -1,4 +1,7 @@
+from dotenv import dotenv_values
+
 from data.courses_mentors_durations import courses, mentors, durations
+from ya_disk import YaFolderUploader
 
 def max_min_len_of_course(courses, mentors, durations) -> tuple:
     courses_list = []
@@ -76,5 +79,24 @@ def correlation(courses, mentors, durations) -> tuple:
 
     return ("Связь есть" if indexes_d == indexes_m else "Связи нет", f"Порядок курсов по длительности: {indexes_d}", f"Порядок курсов по количеству преподавателей: {indexes_m}")
 
+def make_folder(file_name) -> str:
+    config = dotenv_values(".env")
+    TOKEN = config["TOKEN"]
+    folder_uploader = YaFolderUploader(TOKEN)
+
+    responce = folder_uploader.make_folder(file_name)
+
+    return responce.status_code
+
+def delete_folder(file_name) -> str:
+    config = dotenv_values(".env")
+    TOKEN = config["TOKEN"]
+    folder_uploader = YaFolderUploader(TOKEN)
+
+    responce = folder_uploader.delete_folder(file_name)
+
+    return responce.status_code
+
 if __name__ == "__main__":
-    print(ordered_sequence(courses, mentors, durations))
+    print(make_folder("test"))
+    print(delete_folder("test"))
