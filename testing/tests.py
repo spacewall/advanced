@@ -4,7 +4,7 @@ from data.courses_mentors_durations import courses, mentors, durations
 from main import max_min_len_of_course, ordered_sequence, correlation
 
 
-class TestMain(unittest.TestCase):
+class TestUnitMain(unittest.TestCase):
     def test_first_task_max_len(self):
         result = max_min_len_of_course(courses, mentors, durations)
         
@@ -33,5 +33,5 @@ class TestMain(unittest.TestCase):
         self.assertIsNotNone(result)
 
 
-if __name__ == "__main__":
-    unittest.main()
+# if __name__ == "__main__":
+#     unittest.main()
