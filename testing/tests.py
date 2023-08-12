@@ -1,7 +1,8 @@
 import unittest
 
 from data.courses_mentors_durations import courses, mentors, durations
-from main import max_min_len_of_course, ordered_sequence, correlation
+from main_for_collections import max_min_len_of_course, ordered_sequence, correlation
+from main_for_api import delete_folder, make_folder
 
 
 class TestUnitMain(unittest.TestCase):
@@ -33,5 +34,38 @@ class TestUnitMain(unittest.TestCase):
         self.assertIsNotNone(result)
 
 
-# if __name__ == "__main__":
-#     unittest.main()
+class TestUnitMainAPI(unittest.TestCase):
+    def test_make_folder_status_code(self):
+        status_code = make_folder("test")
+        delete_folder("test")
+
+        self.assertEqual(201, status_code, "A folder has not been created")
+
+    @unittest.expectedFailure
+    def test_double_make_folder_status_code(self):
+        make_folder("test")
+        status_code = make_folder("test")
+        delete_folder("test")
+        
+        self.assertEqual(201, status_code)
+
+    @unittest.expectedFailure
+    def test_delete_folder_invalid_token(self):
+        status_code = delete_folder("test", TOKEN="FAKE_TOKEN")
+
+        self.assertEqual(204, status_code)
+
+    @unittest.expectedFailure
+    def test_delete_status_code(self):
+        status_code = delete_folder("fake_test")
+
+        self.assertEqual(204, status_code)
+
+    def test_delete_error_status_code(self):
+        status_code = delete_folder("test")
+
+        self.assertEqual(404, status_code)
+
+
+if __name__ == "__main__":
+    unittest.main()
